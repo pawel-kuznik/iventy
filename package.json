@@ -1,10 +1,10 @@
 {
   "name": "iventy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An event lib for js.",
   "main": "Iventy.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha tests"
   },
   "repository": {
     "type": "git",
@@ -12,5 +12,9 @@
   },
   "author": "Paweł Kuźnik <pawel.kuznik@gmail.com>",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/neosatan/iventy#readme"
+  "homepage": "https://bitbucket.org/neosatan/iventy#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
 }
