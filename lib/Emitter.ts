@@ -1,11 +1,18 @@
+/**
+ *  A class that can be used as event emitter on client and server side. An
+ *  event emitter allows to register a number of callbacks that should be
+ *  triggered when an event on specific channel is triggered. It's possible
+ *  to distinguish channels by names.
+ *
+ *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
+ */
 
 /// <reference path="Event.ts" />
 
-
 namespace Iventy {
 
-
-    interface Callback {
+    // an interface which we want to use to describe an event handler
+    interface EventHandler {
         (event:Iventy.Event) : void;
     };
 
@@ -15,7 +22,7 @@ namespace Iventy {
         /**
          *  A map container arrays of callbacks per callback channel.
          */
-        private readonly _channels:Map<string, Array<Callback>> = new Map();
+        private readonly _channels:Map<string, Array<EventHandler>> = new Map();
 
         private _bubbleTo:Emitter | null = null;
 
@@ -54,7 +61,7 @@ namespace Iventy {
          *  @param  string      The channel name.
          *  @param  function    The callback to call when the event is triggered
          */
-        on(name:string, callback:Callback) : Iventy.Emitter {
+        on(name:string, callback:EventHandler) : Iventy.Emitter {
 
             // get the callbacks
             let callbacks = this._channels.get(name);
@@ -82,7 +89,7 @@ namespace Iventy {
          *
          *  @return Emitter
          */
-        off(name:string, callback:Callback | null = null) : Iventy.Emitter{
+        off(name:string, callback:EventHandler | null = null) : Iventy.Emitter{
 
             // get the callbacks
             let callbacks = this._channels.get(name);
@@ -91,7 +98,7 @@ namespace Iventy {
             if (!callbacks) return this;
 
             // filter out all callbacks
-            if (callback) this._channels.set(name, callbacks.filter((item:Callback) => item != callback));
+            if (callback) this._channels.set(name, callbacks.filter((item:EventHandler) => item != callback));
 
             // we should remove all possible callbacks
             else callbacks.length = 0;
