@@ -2,10 +2,12 @@
   "name": "iventy",
   "version": "2.0.0",
   "description": "An event lib for js.",
-  "main": "Iventy.js",
+  "main": "build/iventy.js",
+  "types": "build/iventy.d.ts",
   "scripts": {
     "test": "mocha tests",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

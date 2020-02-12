@@ -8,8 +8,8 @@
 const expect = require('chai').expect;
 
 // the Event class to text
-const Event = require('../lib/Event.js');
-const Emitter = require('../lib/Emitter.js');
+const Event = require('../build/iventy.js').Event;
+const Emitter = require('../build/iventy.js').Emitter;
 
 // start testing the Event class
 describe('Event', () => {
@@ -70,7 +70,7 @@ describe('Event', () => {
             // prevent the event
             event.prevent();
 
-            // check if the prevented changed 
+            // check if the prevented changed
             expect(event).to.have.property('isPrevented').and.equal(true);
         });
     });

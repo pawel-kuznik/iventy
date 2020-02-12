@@ -7,134 +7,129 @@
  *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
+/// <reference path="EventHandler.ts" />
 /// <reference path="Event.ts" />
+import { EventHandler } from "./EventHandler";
+import { Event } from "./Event";
 
-namespace Iventy {
+// export the class
+export class Emitter {
 
-    // an interface which we want to use to describe an event handler
-    interface EventHandler {
-        (event:Iventy.Event) : void;
+    /**
+     *  A map container arrays of callbacks per callback channel.
+     */
+    private readonly _channels:Map<string, Array<EventHandler>> = new Map();
+
+    private _bubbleTo:Emitter | null = null;
+
+    /**
+     *  The constructor
+     */
+    constructor () {
+
+        // nothing special
+    }
+
+    /**
+     *  Trigger event on the emitter.
+     *
+     *  @param  Iventy.Event    The event instance that should be triggered.
+     *  @return Iventy.Emitter  The emitter that the event was called on.
+     */
+    trigger (event:Event) : Emitter {
+
+        // try to fetch callbacks
+        let callbacks = this._channels.get(event.type);
+
+        // if we have them we can iterate over them and call each of tuem with event
+        if (callbacks) for (let callback of callbacks) callback(event);
+
+        // should we bubble the event further? but only when it was not stopped
+        if (this._bubbleTo && !event.isStopped) this._bubbleTo.trigger(event);
+
+        // allow chaining
+        return this;
     };
 
-    // export the class
-    export class Emitter {
+    /**
+     *  Install callback on given channel.
+     *
+     *  @param  string      The channel name.
+     *  @param  function    The callback to call when the event is triggered
+     */
+    on(name:string, callback:EventHandler) : Emitter {
 
-        /**
-         *  A map container arrays of callbacks per callback channel.
-         */
-        private readonly _channels:Map<string, Array<EventHandler>> = new Map();
+        // get the callbacks
+        let callbacks = this._channels.get(name);
 
-        private _bubbleTo:Emitter | null = null;
+        // push the new callback (if we have them)
+        if (callbacks) callbacks.push(callback);
 
-        /**
-         *  The constructor
-         */
-        constructor () {
+        // we need to register a new channel and push an array with the first callback
+        else this._channels.set(name, [ callback ]);
 
-            // nothing special
-        }
+        // allow chaining
+        return this;
+    }
 
-        /**
-         *  Trigger event on the emitter.
-         *
-         *  @param  Iventy.Event    The event instance that should be triggered.
-         *  @return Iventy.Emitter  The emitter that the event was called on.
-         */
-        trigger (event:Iventy.Event) : Iventy.Emitter {
+    /**
+     *  Uninstall callback on given channel.
+     *
+     *  @param  string      The channel name.
+     *  @param  function    The callback to uninstall.
+     *  @return Emitter
+     *
+     *  ---------------------------------------------
+     *
+     *  Uninstall all registered callbacks.
+     *
+     *  @return Emitter
+     */
+    off(name:string, callback:EventHandler | null = null) : Emitter{
 
-            // try to fetch callbacks
-            let callbacks = this._channels.get(event.type);
+        // get the callbacks
+        let callbacks = this._channels.get(name);
 
-            // if we have them we can iterate over them and call each of tuem with event
-            if (callbacks) for (let callback of callbacks) callback(event);
+        // not a single callback on given channel? we are done then
+        if (!callbacks) return this;
 
-            // should we bubble the event further? but only when it was not stopped
-            if (this._bubbleTo && !event.isStopped) this._bubbleTo.trigger(event);
+        // filter out all callbacks
+        if (callback) this._channels.set(name, callbacks.filter((item:EventHandler) => item != callback));
 
-            // allow chaining
-            return this;
-        };
+        // we should remove all possible callbacks
+        else callbacks.length = 0;
 
-        /**
-         *  Install callback on given channel.
-         *
-         *  @param  string      The channel name.
-         *  @param  function    The callback to call when the event is triggered
-         */
-        on(name:string, callback:EventHandler) : Iventy.Emitter {
+        // allow chaining
+        return this;
+    }
 
-            // get the callbacks
-            let callbacks = this._channels.get(name);
+    /**
+     *  This is a function that will allow to bubble an event to another emitter
+     *
+     *  @param  EventEmitter
+     */
+    bubbleTo(target:Emitter | null = null) : Emitter {
 
-            // push the new callback (if we have them)
-            if (callbacks) callbacks.push(callback);
+        // set new target
+        this._bubbleTo = target;
 
-            // we need to register a new channel and push an array with the first callback
-            else this._channels.set(name, [ callback ]);
+        // allow chaining
+        return this;
+    }
 
-            // allow chaining
-            return this;
-        }
+    /**
+     *  A method to create an event based on this emitter.
+     *
+     *  @param  string  The name of the channel of the event.
+     *  @param  mixed   (Optional) The object of the event.
+     *  @param  Event   (Optional) The previous event in the chain. If none
+     *                  is provided then event has no previous event.
+     *
+     *  @return Event   The constructed event.
+     */
+    createEvent(name:string, data:object = { }, previousEvent:Event | null = null) : Event {
 
-        /**
-         *  Uninstall callback on given channel.
-         *
-         *  @param  string      The channel name.
-         *  @param  function    The callback to uninstall.
-         *  @return Emitter
-         *
-         *  ---------------------------------------------
-         *
-         *  Uninstall all registered callbacks.
-         *
-         *  @return Emitter
-         */
-        off(name:string, callback:EventHandler | null = null) : Iventy.Emitter{
-
-            // get the callbacks
-            let callbacks = this._channels.get(name);
-
-            // not a single callback on given channel? we are done then
-            if (!callbacks) return this;
-
-            // filter out all callbacks
-            if (callback) this._channels.set(name, callbacks.filter((item:EventHandler) => item != callback));
-
-            // we should remove all possible callbacks
-            else callbacks.length = 0;
-
-            // allow chaining
-            return this;
-        }
-
-        /**
-         *  This is a function that will allow to bubble an event to another emitter
-         *
-         *  @param  EventEmitter
-         */
-        bubbleTo(target:Iventy.Emitter | null = null) : Iventy.Emitter {
-
-            // set new target
-            this._bubbleTo = target;
-
-            // allow chaining
-            return this;
-        }
-
-        /**
-         *  A method to create an event based on this emitter.
-         *
-         *  @param  string  The name of the channel of the event.
-         *  @param  mixed   (Optional) The object of the event.
-         *  @param  Event   (Optional) The previous event in the chain. If none
-         *                  is provided then event has no previous event.
-         *
-         *  @return Event   The constructed event.
-         */
-        createEvent(name:string, data:object = { }, previousEvent:Iventy.Event | null = null) : Iventy.Event {
-
-            // construct new event
-            return new Iventy.Event(name, data, this, previousEvent);
-        }
-    };
-}
+        // construct new event
+        return new Event(name, data, this, previousEvent);
+    }
+};

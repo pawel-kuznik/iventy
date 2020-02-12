@@ -6,6 +6,6 @@
     "outDir": "./build",
     "strict": true
   },
-  "include": ["lib"],
+  "files": ["iventy.ts"],
   "exclude": ["build", "node_modules", "**/__tests__/*"]
 }

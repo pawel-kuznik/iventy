@@ -8,7 +8,7 @@
 const expect = require('chai').expect;
 
 // the Event class to text
-const Emitter = require('../lib/Emitter.js');
+const Emitter = require('../build/iventy.js').Emitter;
 
 // start the test of the Emitter class
 describe('Emitter', () => {
