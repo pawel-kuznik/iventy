@@ -57,6 +57,18 @@ describe('Event', () => {
             expect(event).to.have.property('previous').and.equal(one);
             expect(event).to.have.property('target').and.equal(one.target);
         });
+
+        it('should assign tags from the type name', () => {
+
+            // construct an event
+            let event = new Event('test.tag1');
+
+            // expect tags in the event
+            expect(event.tags).to.have.lengthOf(1);
+
+            // expect proper tag
+            expect(event.tags[0]).to.equal('tag1');
+        });
     });
 
     // test the prevent method

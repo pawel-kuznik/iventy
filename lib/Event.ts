@@ -7,6 +7,11 @@
  *  target:Emitter          The emitter that ignited the event.
  *  currentTarget:Emitter   The last emitter in bubble chaing
  *
+ *  The type provided to this class can contain tags. They can be provided by
+ *  dot separating them from the actual type. Follow this pattern:
+ *
+ *      type.tag1.tag2.tag3
+ *
  *  @author Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
@@ -20,6 +25,11 @@ export class Event {
      *  The event type.
      */
     private _type:string;
+
+    /**
+     *  The tags associated with the event.
+     */
+    private _tags:Array<string> = [];
 
     /**
      *  The data associated with the event.
@@ -52,8 +62,12 @@ export class Event {
      */
     public constructor(type:string, data:object, target:Emitter | null  = null, prev:Event | null = null) {
 
+        // split the type by a dot
+        let parts = type.split('.');
+
         // assign the basic data
-        this._type = type;
+        this._type = parts[0];
+        this._tags = parts.slice(1);
         this._data = data;
         this._target = target;
         this._prev = prev;
@@ -100,7 +114,14 @@ export class Event {
      *
      *  @return string
      */
-    public get type () : string { return this._type; }
+    public get type() : string { return this._type; }
+
+    /**
+     *  Get access to tags assigend to this event.
+     *
+     *  @return Array
+     */
+    public get tags() : Array<string> { return Array.from(this._tags); }
 
     /**
      *  The data associated with the event.
