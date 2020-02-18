@@ -17,26 +17,54 @@ export class Emitter {
 
     /**
      *  A map container arrays of callbacks per callback channel.
+     *  @var    Map
      */
     private readonly _channels:Map<string, Array<EventHandler>> = new Map();
 
+    /**
+     *  An emitter instance that we want to bubble oll our events.
+     *  @var    Emitter
+     */
     private _bubbleTo:Emitter | null = null;
 
     /**
      *  The constructor
      */
-    constructor () {
+    public constructor () {
 
         // nothing special
     }
 
     /**
+     *  Trigger an event based on name, data and previous event.
+     *
+     *  @param  string  The name of the channel of the event.
+     *  @param  mixed   (Optional) The object of the event.
+     *  @param  Event   (Optional) The previous event in the chain. If none
+     *                  is provided then event has no previous event.
+     *
+     *  @return Event   The triggered event.
+     */
+    protected trigger(name:string, data:object, previousEvent:Event | null) : Event;
+    /**
      *  Trigger event on the emitter.
      *
      *  @param  Iventy.Event    The event instance that should be triggered.
-     *  @return Iventy.Emitter  The emitter that the event was called on.
+     *  @return Iventy.Event    The triggered event.
      */
-    trigger (event:Event) : Emitter {
+    protected trigger(event:Event) : Event;
+
+    // the actual implementation
+    protected trigger(...args:Array<any>) : any
+    {
+        // destruct arguments
+        let [name, data, prev] = args;
+
+        // check if we have a string
+        if (typeof(name) == 'string') return this.trigger(this.createEvent(name, data, prev));
+
+        // we are in the first overload
+        let event = name;
 
         // try to fetch callbacks
         let callbacks = this._channels.get(event.type);
@@ -47,8 +75,8 @@ export class Emitter {
         // should we bubble the event further? but only when it was not stopped
         if (this._bubbleTo && !event.isStopped) this._bubbleTo.trigger(event);
 
-        // allow chaining
-        return this;
+        // return the triggered event
+        return event;
     };
 
     /**
@@ -57,7 +85,7 @@ export class Emitter {
      *  @param  string      The channel name.
      *  @param  function    The callback to call when the event is triggered
      */
-    on(name:string, callback:EventHandler) : Emitter {
+    public on(name:string, callback:EventHandler) : Emitter {
 
         // get the callbacks
         let callbacks = this._channels.get(name);
@@ -85,7 +113,7 @@ export class Emitter {
      *
      *  @return Emitter
      */
-    off(name:string, callback:EventHandler | null = null) : Emitter{
+    public off(name:string, callback:EventHandler | null = null) : Emitter{
 
         // get the callbacks
         let callbacks = this._channels.get(name);
@@ -108,7 +136,7 @@ export class Emitter {
      *
      *  @param  EventEmitter
      */
-    bubbleTo(target:Emitter | null = null) : Emitter {
+    public bubbleTo(target:Emitter | null = null) : Emitter {
 
         // set new target
         this._bubbleTo = target;
@@ -127,7 +155,7 @@ export class Emitter {
      *
      *  @return Event   The constructed event.
      */
-    createEvent(name:string, data:object = { }, previousEvent:Event | null = null) : Event {
+    public createEvent(name:string, data:object = { }, previousEvent:Event | null = null) : Event {
 
         // construct new event
         return new Event(name, data, this, previousEvent);

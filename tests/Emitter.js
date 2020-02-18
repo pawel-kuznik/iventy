@@ -24,4 +24,45 @@ describe('Emitter', () => {
             expect(emitter).to.be.instanceof(Emitter);
         });
     });
+
+    describe('#trigger', () => {
+
+        it('should trigger a constructed event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // create an event
+            let event = emitter.createEvent('test');
+
+            // install a callback
+            emitter.on('test', triggeredEvent => {
+
+                // it should be the same event
+                expect(event).to.equal(triggeredEvent);
+
+                // we are done
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger(event);
+        });
+
+        it('should trigger an emplaced event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test', triggeredEvent => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test');
+        });
+    });
 });

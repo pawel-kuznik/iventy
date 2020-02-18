@@ -1,3 +1,8 @@
+/**
+ *  This is an interface describing a proper event handler.
+ *
+ *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
+ */
 
 import { Event } from "./Event";
 
