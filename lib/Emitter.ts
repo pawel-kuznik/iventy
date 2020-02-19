@@ -9,8 +9,10 @@
 
 /// <reference path="EventHandler.ts" />
 /// <reference path="Event.ts" />
+/// <reference path="Channel.ts" />
 import { EventHandler } from "./EventHandler";
 import { Event } from "./Event";
+import { Channel } from "./Channel";
 
 // export the class
 export class Emitter {

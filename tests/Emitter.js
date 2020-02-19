@@ -65,4 +65,71 @@ describe('Emitter', () => {
             emitter.trigger('test');
         });
     });
+
+    describe('on', () => {
+
+        it('should handle an event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test');
+        });
+
+        it('should handle a tagged event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test.tag', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test.tag');
+        });
+
+        it ('should handle event despise a tag', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test.tag');
+        });
+
+        it('should not handle event with different tag', () => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test.another', () => {
+
+                // we are done here
+                throw new Error('do not handle this');
+            });
+
+            // trigger the event
+            emitter.trigger('test.test');
+        });
+    });
 });
