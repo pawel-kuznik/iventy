@@ -14,7 +14,7 @@ const IventyEvent = require('../build/lib/Event.js').Event;
 // start the test of the Emitter class
 describe('Channel', () => {
 
-    describe('.register', () => {
+    describe('.register()', () => {
 
         it('should register a callback', () => {
 
@@ -50,6 +50,73 @@ describe('Channel', () => {
 
             // expect to have a callback
             expect(channel.size).to.be.equal(2);
+        });
+    });
+
+    describe('.trigger()', () => {
+
+        it('should trigger the event', (done) => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // register a callback
+            channel.register(event => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger an event on the channel
+            channel.trigger(new IventyEvent('test'));
+        });
+
+        it('should trigger an event on certain tag', (done) => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // register a callback
+            channel.register(event => {
+
+                // we are done here
+                done();
+            }, 'tag1');
+
+            // trigger an event on the channel
+            channel.trigger(new IventyEvent('test.tag1'));
+        });
+
+        it('should invoke general callback regardless of tag', (done) => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // register a callback
+            channel.register(event => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger an event on the channel
+            channel.trigger(new IventyEvent('test.tag1'));
+        });
+
+        it('should not invoke not matching callbacks', () => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // register a callback
+            channel.register(event => {
+
+                // we are done here
+                throw('Error');
+            }, 'tag2');
+
+            // trigger an event on the channel
+            channel.trigger(new IventyEvent('test.tag1'));
         });
     });
 });
