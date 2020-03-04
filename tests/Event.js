@@ -15,7 +15,7 @@ const Emitter = require('../build/iventy.js').Emitter;
 describe('Event', () => {
 
     // test the constructor
-    describe('#constructor', () => {
+    describe('.constructor()', () => {
 
         it('should create a basic event', () => {
 
@@ -72,7 +72,7 @@ describe('Event', () => {
     });
 
     // test the prevent method
-    describe('#prevent', () => {
+    describe('.prevent()', () => {
 
         it('should change the .isPrevented property', () => {
 
@@ -88,7 +88,7 @@ describe('Event', () => {
     });
 
     // test the createEvent method
-    describe('#createEvent', () => {
+    describe('.createEvent()', () => {
 
         it('should create a new event based on current one', () => {
 

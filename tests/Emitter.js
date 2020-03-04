@@ -13,7 +13,7 @@ const Emitter = require('../build/iventy.js').Emitter;
 // start the test of the Emitter class
 describe('Emitter', () => {
 
-    describe('#constructor', () => {
+    describe('.constructor()', () => {
 
         it('should construct a simple Emitter', () => {
 
@@ -25,7 +25,7 @@ describe('Emitter', () => {
         });
     });
 
-    describe('#trigger', () => {
+    describe('.trigger()', () => {
 
         it('should trigger a constructed event', done => {
 
@@ -66,7 +66,7 @@ describe('Emitter', () => {
         });
     });
 
-    describe('on', () => {
+    describe('.on()', () => {
 
         it('should handle an event', done => {
 
