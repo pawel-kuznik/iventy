@@ -4,7 +4,8 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./build",
-    "strict": true
+    "strict": true,
+    "lib": ["es6", "es2017"]
   },
   "files": ["iventy.ts"],
   "exclude": ["build", "node_modules", "**/__tests__/*"]

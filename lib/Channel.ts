@@ -47,7 +47,7 @@
      public register(...args:Array<any>) : Channel
      {
          // destruct the parameters
-         let [t, handler] = args;
+         let [handler, t] = args;
 
          // if the data is an array we want to call same method on each element
          if (Array.isArray(t)) t.forEach(tag => this.register(handler, tag));
@@ -57,5 +57,30 @@
 
          // allow chaining
          return this;
+     }
+
+     /**
+      *  Trigger a specific event on this channel.
+      *  @param Event   The event to trigger on this channel.
+      */
+     public trigger(event:Event) : void
+     {
+         // iterate over the callbacks and try to trigger the event properly
+         for (let [tag, handler] of this._callbacks) {
+
+             // if the tag of the handler is null or the event tags include
+             // the tag of the handler we want to call the event handler
+             if (tag == null || event.tags.includes(tag)) handler(event);
+         }
+     }
+
+     /**
+      * How many different callbacks are registered in this channel?
+      * @return int
+      */
+     public get size()
+     {
+         // return the length of our callbacks
+         return this._callbacks.length;
      }
  };
