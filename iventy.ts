@@ -4,3 +4,4 @@
 export { Event } from './lib/Event';
 export { Emitter } from './lib/Emitter';
 export { EventHandler } from './lib/EventHandler';
+export { Federation } from './lib/Federation';
