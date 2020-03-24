@@ -53,6 +53,46 @@ describe('Channel', () => {
         });
     });
 
+    describe('.unregister()', () => {
+
+        it('should unregister same callback', () => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // the handler
+            const handler = event => { };
+
+            // register a callback
+            channel.register(handler);
+
+            // unregister the callback
+            channel.unregister(handler);
+
+            // expect to have a callback
+            expect(channel.size).to.be.equal(0);
+        });
+
+        it('should unregister callbacks by tag', () => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // the handler
+            const handler = event => { };
+
+            // register a callback
+            channel.register(handler);
+            channel.register(handler, 'tag1');
+
+            // unregister the callback
+            channel.unregister(handler, 'tag1');
+
+            // expect to have a callback
+            expect(channel.size).to.be.equal(1);
+        });
+    });
+
     describe('.trigger()', () => {
 
         it('should trigger the event', (done) => {

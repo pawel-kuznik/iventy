@@ -21,7 +21,7 @@ export class Emitter {
      *  A map container arrays of callbacks per callback channel.
      *  @var    Map
      */
-    private readonly _channels:Map<string, Array<EventHandler>> = new Map();
+    private readonly _channels:Map<string, Channel> = new Map();
 
     /**
      *  An emitter instance that we want to bubble oll our events.
@@ -72,7 +72,7 @@ export class Emitter {
         let callbacks = this._channels.get(event.type);
 
         // if we have them we can iterate over them and call each of tuem with event
-        if (callbacks) for (let callback of callbacks) callback(event);
+        if (callbacks) callbacks.trigger(event);
 
         // should we bubble the event further? but only when it was not stopped
         if (this._bubbleTo && !event.isStopped) this._bubbleTo.trigger(event);
@@ -89,14 +89,17 @@ export class Emitter {
      */
     public on(name:string, callback:EventHandler) : Emitter {
 
+        // split the name and tags
+        let [channelName, ...tags] = name.split('.');
+
         // get the callbacks
-        let callbacks = this._channels.get(name);
+        let callbacks = this._channels.get(channelName);
 
         // push the new callback (if we have them)
-        if (callbacks) callbacks.push(callback);
+        if (callbacks) callbacks.register(callback, tags);
 
         // we need to register a new channel and push an array with the first callback
-        else this._channels.set(name, [ callback ]);
+        else this._channels.set(channelName, new Channel());
 
         // allow chaining
         return this;
@@ -115,19 +118,23 @@ export class Emitter {
      *
      *  @return Emitter
      */
-    public off(name:string, callback:EventHandler | null = null) : Emitter{
+    public off(name:string, callback:EventHandler | null = null) : Emitter {
+
+        // split the name and tags
+        let [channelName, ...tags] = name.split('.');
 
         // get the callbacks
-        let callbacks = this._channels.get(name);
+        let callbacks = this._channels.get(channelName);
 
         // not a single callback on given channel? we are done then
         if (!callbacks) return this;
 
-        // filter out all callbacks
-        if (callback) this._channels.set(name, callbacks.filter((item:EventHandler) => item != callback));
+        // do we have a channel name and no callback or tags? then remove the whole
+        // channel from this emitter.
+        if (channelName && callback == null && tags.length == 0) this._channels.delete(channelName);
 
-        // we should remove all possible callbacks
-        else callbacks.length = 0;
+        // do we have a channel name and callback? they ask the callbacks to unregister it (with possible tags)
+        if (channelName && callback) callbacks.unregister(callback, tags)
 
         // allow chaining
         return this;

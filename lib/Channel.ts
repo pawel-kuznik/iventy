@@ -60,6 +60,62 @@
      }
 
      /**
+      * Unregister the callback.
+      * @param  function    The event handler to unregister.
+      * @param  Array       An array of tags
+      * @return Channel
+      */
+     public unregister(handler:EventHandler, tags:Array<string>) : Channel
+
+     /**
+      * Unregister the callback.
+      * @param  function    The event handler to unregister.
+      * @param  string      The tag to unregister the handler for.
+      * @return Channel
+      */
+     public unregister(handler:EventHandler, tag:string|null) : Channel
+
+     /**
+      * Unregister the callback from all possible callbacks.
+      * @param  function    The event handler to unregister.
+      * @return Channel
+      */
+     public unregister(handler:EventHandler) : Channel
+
+     // the implementation
+     public unregister(...args:Array<any>) : Channel
+     {
+         // destruct the arguments into pieces
+         let [handler, t] = args;
+
+         // do we have an array of tags to unregister we need to call the method many times
+         if (Array.isArray(t)) {
+
+             // call the unregister for each tag
+             t.forEach(t => this.unregister(handler, t));
+
+             // allow chaining
+             return this;
+         }
+
+         // filter out all callbacks matching the passed handler
+         this._callbacks = this._callbacks.filter(([tag, callback]) => {
+
+            // tags don't match? then it's ok
+            if (t && t != tag) return true;
+
+            // there is a matching tag, check if it's a different handler
+            if (t && t == tag) return handler != callback;
+
+            // we want to remove all callbackas matching the handler
+            return handler != callback
+         });
+
+         // allow chaining
+         return this;
+     }
+
+     /**
       *  Trigger a specific event on this channel.
       *  @param Event   The event to trigger on this channel.
       */
