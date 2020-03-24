@@ -95,11 +95,22 @@ export class Emitter {
         // get the callbacks
         let callbacks = this._channels.get(channelName);
 
-        // push the new callback (if we have them)
-        if (callbacks) callbacks.register(callback, tags);
+        // no channels? then we have to create a new one
+        if (!callbacks) {
 
-        // we need to register a new channel and push an array with the first callback
-        else this._channels.set(channelName, new Channel());
+            // construct new channel
+            callbacks = new Channel();
+
+            // store the channel for later use
+            this._channels.set(channelName, callbacks);
+        }
+
+        // do we have callbacks? then use the method. Otherwise, we assume we
+        // don't have any callbacks
+        if (tags.length) callbacks.register(callback, tags);
+
+        // register the callback on all
+        else callbacks.register(callback);
 
         // allow chaining
         return this;

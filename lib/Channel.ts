@@ -21,7 +21,8 @@
      private _callbacks:Array<[string|null, EventHandler]> = [];
 
      /**
-      * Register a callback under each tag passed in the tags parameter.
+      * Register a callback under each tag passed in the tags parameter. If the
+      * array is empty, this call will behave like register(handler).
       * @param function A callback to register
       * @param Array    An array of tags to register the callback under
       * @return Channel
@@ -49,8 +50,15 @@
          // destruct the parameters
          let [handler, t] = args;
 
-         // if the data is an array we want to call same method on each element
-         if (Array.isArray(t)) t.forEach(tag => this.register(handler, tag));
+         // is the tag input an array? then we need to special handle it
+         if (Array.isArray(t)) {
+
+             // register callback for each tag
+             if (t.length) t.forEach(tag => this.register(handler, tag));
+
+             // no tags to register? then just call the register method
+             else this.register(handler);
+         }
 
          // just register it under the tag
          else this._callbacks.push([t || null, handler]);
