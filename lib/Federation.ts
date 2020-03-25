@@ -14,6 +14,19 @@ import { Emitter } from "./Emitter";
 // export the class
 export class Federation {
 
+    /**
+     *  A set of emitters that are the targets.
+     *  @var Set
+     */
+    private readonly _targets:Set<Emitter|Federation> = new Set();
+
+    /**
+     *  The size of the federation. It accounts for all added emitters
+     *  and fedeations.
+     *  @return int
+     */
+    get size() : number { return this._targets.size; }
+
      /**
       * Add a new emitter to the federation. This federation will be added with
       * a certain name(s) so that it would be possible to distinguish events from
@@ -23,7 +36,7 @@ export class Federation {
       *                     with this emitter.
       * @return Federation
       */
-     add(emitter:Emitter, tag:string|Array<string>) : Federation
+     add(emitter:Emitter, tag:string|Array<string>|null = null) : Federation
 
      /**
       * Add a new federation to the federation. The added federation will be added
@@ -34,11 +47,20 @@ export class Federation {
       *                     with this emitter.
       * @return Federation
       */
-     add(federation:Federation, tag:string|Array<string>) : Federation
+     add(federation:Federation, tag:string|Array<string>|null = null) : Federation
 
      // the actual implementation
-     add(taget:any) : Federation
+     add(...args:Array<any>) : Federation
      {
+         // destruct the arguments
+         let [target, t] = args;
+
+         // @todo add tags handling
+
+         // add the target
+         this._targets.add(target);
+
+         // allow chaining
          return this;
      }
 

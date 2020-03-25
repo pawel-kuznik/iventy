@@ -142,7 +142,7 @@
       * How many different callbacks are registered in this channel?
       * @return int
       */
-     public get size()
+     public get size() : number
      {
          // return the length of our callbacks
          return this._callbacks.length;
