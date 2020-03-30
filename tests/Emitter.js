@@ -132,4 +132,49 @@ describe('Emitter', () => {
             emitter.trigger('test.test');
         });
     });
+
+    describe('.bubbleTo()', () => {
+
+        it('should bubble events from one emitter to another', done => {
+
+            // construct two event emitters
+            const emitterOne = new Emitter(), emitterTwo = new Emitter();
+
+            // make the emitter one bubble all events to emitter two
+            emitterOne.bubbleTo(emitterTwo);
+
+            // install a test handler on emitter two
+            emitterTwo.on('test', () => void done());
+
+            //  trigger test event
+            emitterOne.trigger('test');
+        });
+
+        it('should bubble events from one emitter to all rising emitters', done => {
+
+            // create 3 emitters
+            const emitterOne = new Emitter(), emitterTwo = new Emitter(), emitterThree = new Emitter();
+
+            // bubble events from emitter one to emitter two and three
+            emitterOne.bubbleTo(emitterTwo);
+            emitterOne.bubbleTo(emitterThree);
+
+            // make one emitter flag and second emitter flag
+            let one = false, two = false;
+
+            // install callbacks
+            emitterTwo.on('test', () => { one = true; });
+            emitterThree.on('test', () => { two = true; });
+
+            // trigger the event
+            emitterOne.trigger('test');
+
+            // execute with timeout
+            setTimeout(() => {
+
+                // we have both flags set, then we are done
+                if (one && two) done();
+            });
+        });
+    });
 });

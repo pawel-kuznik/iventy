@@ -24,10 +24,10 @@ export class Emitter {
     private readonly _channels:Map<string, Channel> = new Map();
 
     /**
-     *  An emitter instance that we want to bubble oll our events.
-     *  @var    Emitter
+     *  All instances we want to bubble our events to.
+     *  @var    Set<Emitter>
      */
-    private _bubbleTo:Emitter | null = null;
+    private _bubbleTo:Set<Emitter> = new Set();
 
     /**
      *  The constructor
@@ -47,17 +47,18 @@ export class Emitter {
      *
      *  @return Event   The triggered event.
      */
-    protected trigger(name:string, data:object, previousEvent:Event | null) : Event;
+    public trigger(name:string, data:object, previousEvent:Event | null) : Event;
+
     /**
      *  Trigger event on the emitter.
      *
      *  @param  Iventy.Event    The event instance that should be triggered.
      *  @return Iventy.Event    The triggered event.
      */
-    protected trigger(event:Event) : Event;
+    public trigger(event:Event) : Event;
 
     // the actual implementation
-    protected trigger(...args:Array<any>) : any
+    public trigger(...args:Array<any>) : any
     {
         // destruct arguments
         let [name, data, prev] = args;
@@ -75,7 +76,7 @@ export class Emitter {
         if (callbacks) callbacks.trigger(event);
 
         // should we bubble the event further? but only when it was not stopped
-        if (this._bubbleTo && !event.isStopped) this._bubbleTo.trigger(event);
+        if (!event.isStopped) this._bubbleTo.forEach(handler => handler.trigger(event));
 
         // return the triggered event
         return event;
@@ -155,11 +156,12 @@ export class Emitter {
      *  This is a function that will allow to bubble an event to another emitter
      *
      *  @param  EventEmitter
+     *  @return Emitter
      */
-    public bubbleTo(target:Emitter | null = null) : Emitter {
+    public bubbleTo(target:Emitter) : Emitter {
 
         // set new target
-        this._bubbleTo = target;
+        this._bubbleTo.add(target);
 
         // allow chaining
         return this;

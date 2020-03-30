@@ -12,20 +12,7 @@ import { EventHandler } from "./EventHandler";
 import { Emitter } from "./Emitter";
 
 // export the class
-export class Federation {
-
-    /**
-     *  A set of emitters that are the targets.
-     *  @var Set
-     */
-    private readonly _targets:Set<Emitter|Federation> = new Set();
-
-    /**
-     *  The size of the federation. It accounts for all added emitters
-     *  and fedeations.
-     *  @return int
-     */
-    public get size() : number { return this._targets.size; }
+export class Federation extends Emitter {
 
      /**
       * Add a new emitter to the federation. This federation will be added with
@@ -52,69 +39,14 @@ export class Federation {
      public add(federation:Federation) : Federation;
 
      // the actual implementation
-     public add(...args:Array<any>) : Federation
-     {
+     public add(...args:Array<any>) : Federation {
          // destruct the arguments
          let [target, t] = args;
 
-         // @todo add tags handling
-
-         // add the target
-         this._targets.add(target);
+         // make the target bubble to this federation
+         target.bubbleTo(this);
 
          // allow chaining
-         return this;
-     }
-
-     /**
-      * Delete an emitter from this federation.
-      * @param Emitter The emitter to add
-      * @return Fedetaion
-      */
-     public delete(emitter:Emitter) : Federation
-
-     /**
-      * Delete a federation from this federation.
-      * @param Emitter The emitter to add
-      * @return Fedetaion
-      */
-     public delete(federation:Federation) : Federation
-
-     // the implementation
-     public delete(...args:Array<any>) : Federation
-     {
-         return this;
-     }
-
-     /**
-      * Install event handler on a specific event name.
-      * @param string       The event name to install callback on.
-      * @param EventHandler The event handler.
-      * @return Federation
-      */
-     public on(name:string, callback:EventHandler) : Federation
-     {
-        return this;
-     }
-
-     /**
-      * Uninstall event handler on a specific event name.
-      * @param string       The event name to install callback on.
-      * @param EventHandler The event handler.
-      * @return Federation
-      */
-     public off(name:string, callback:EventHandler | null = null) : Federation
-     {
-         return this;
-     }
-
-     /**
-      * Bubble all events to a specific emitter.
-      * @param Emitter The emitter to bubble all events.
-      * @return Federation
-      */
-     public bubbleTo(target:Emitter) : Federation
-     {
          return this;
      }
  }

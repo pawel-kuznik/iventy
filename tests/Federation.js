@@ -28,19 +28,6 @@ describe('Federation', () => {
 
     describe('.add()', () => {
 
-        it('should add an emitter to the federation', () => {
-
-            // construct federation and an emitter
-            let federation = new Federation();
-            let emitter = new Emitter();
-
-            // add the emitter
-            federation.add(emitter);
-
-            // expect the federation to to be of size 1
-            expect(federation.size).to.equal(1);
-        });
-
         it('should make sure that events triggerd on added emitter are triggered on federation', done => {
 
             // construct federation and an emitter
