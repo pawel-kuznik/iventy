@@ -1,5 +1,9 @@
 /**
- *  This is a class to handle a single channel.
+ *  This is a class to handle a single channel. A single channel is a collection
+ *  of callbacks that an event instance might be triggered on.
+ *
+ *  The channel can handle tags. These tags are associated with callbacks and
+ *  define if an event can be triggered in certain handlers.
  *
  *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
