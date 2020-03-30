@@ -25,7 +25,7 @@ export class Federation {
      *  and fedeations.
      *  @return int
      */
-    get size() : number { return this._targets.size; }
+    public get size() : number { return this._targets.size; }
 
      /**
       * Add a new emitter to the federation. This federation will be added with
@@ -36,7 +36,8 @@ export class Federation {
       *                     with this emitter.
       * @return Federation
       */
-     add(emitter:Emitter, tag:string|Array<string>|null = null) : Federation
+     public add(emitter:Emitter, tag:string | Array<string>) : Federation;
+     public add(emitter:Emitter) : Federation;
 
      /**
       * Add a new federation to the federation. The added federation will be added
@@ -47,10 +48,11 @@ export class Federation {
       *                     with this emitter.
       * @return Federation
       */
-     add(federation:Federation, tag:string|Array<string>|null = null) : Federation
+     public add(federation:Federation, tag:string | Array<string>) : Federation;
+     public add(federation:Federation) : Federation;
 
      // the actual implementation
-     add(...args:Array<any>) : Federation
+     public add(...args:Array<any>) : Federation
      {
          // destruct the arguments
          let [target, t] = args;
@@ -69,17 +71,17 @@ export class Federation {
       * @param Emitter The emitter to add
       * @return Fedetaion
       */
-     delete(emitter:Emitter) : Federation
+     public delete(emitter:Emitter) : Federation
 
      /**
       * Delete a federation from this federation.
       * @param Emitter The emitter to add
       * @return Fedetaion
       */
-     delete(federation:Federation) : Federation
+     public delete(federation:Federation) : Federation
 
      // the implementation
-     delete(...args:Array<any>) : Federation
+     public delete(...args:Array<any>) : Federation
      {
          return this;
      }
@@ -90,7 +92,7 @@ export class Federation {
       * @param EventHandler The event handler.
       * @return Federation
       */
-     on(name:string, callback:EventHandler) : Federation
+     public on(name:string, callback:EventHandler) : Federation
      {
         return this;
      }
@@ -101,7 +103,7 @@ export class Federation {
       * @param EventHandler The event handler.
       * @return Federation
       */
-     off(name:string, callback:EventHandler | null = null) : Federation
+     public off(name:string, callback:EventHandler | null = null) : Federation
      {
          return this;
      }
@@ -111,7 +113,7 @@ export class Federation {
       * @param Emitter The emitter to bubble all events.
       * @return Federation
       */
-     bubbleTo(target:Emitter) : Federation
+     public bubbleTo(target:Emitter) : Federation
      {
          return this;
      }

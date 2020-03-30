@@ -40,5 +40,21 @@ describe('Federation', () => {
             // expect the federation to to be of size 1
             expect(federation.size).to.equal(1);
         });
+
+        it('should make sure that events triggerd on added emitter are triggered on federation', done => {
+
+            // construct federation and an emitter
+            let federation = new Federation();
+            let emitter = new Emitter();
+
+            // add the emitter
+            federation.add(emitter);
+
+            // install an event handler on test channel
+            federation.on('test', () => void done());
+
+            // trigger test event
+            emitter.trigger('test');
+        });
     });
 });
