@@ -16,7 +16,9 @@
  */
 
 /// <reference path="Emitter.ts">
+/// <reference path="Designator.ts">
 import { Emitter } from "./Emitter";
+import { Designator } from './Designator';
 
 // return the class
 export class Event {
