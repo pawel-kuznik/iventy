@@ -8,84 +8,84 @@
  *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
- /// <reference path="EventHandler.ts" />
- /// <reference path="Event.ts" />
- import { EventHandler } from "./EventHandler";
- import { Event } from "./Event";
+/// <reference path="EventHandler.ts" />
+/// <reference path="Event.ts" />
+import { EventHandler } from "./EventHandler";
+import { Event } from "./Event";
 
- // export the class
- export class Channel {
+// export the class
+export class Channel {
 
-     /**
-      * An array containing all registered callbacks for each tag. Callbacks
-      * registered under no callback are stored under null instead of tag name.
-      * Each item in the array is a tuple tagname-callback.
-      * @var Array
-      */
+    /**
+     * An array containing all registered callbacks for each tag. Callbacks
+     * registered under no callback are stored under null instead of tag name.
+     * Each item in the array is a tuple tagname-callback.
+     * @var Array
+     */
      private _callbacks:Array<[string|null, EventHandler]> = [];
 
-     /**
-      * Register a callback under each tag passed in the tags parameter. If the
-      * array is empty, this call will behave like register(handler).
-      * @param function A callback to register
-      * @param Array    An array of tags to register the callback under
-      * @return Channel
-      */
-     public register(handler:EventHandler, tags:Array<string>) : Channel
+    /**
+     * Register a callback under each tag passed in the tags parameter. If the
+     * array is empty, this call will behave like register(handler).
+     * @param function A callback to register
+     * @param Array    An array of tags to register the callback under
+     * @return Channel
+     */
+    public register(handler:EventHandler, tags:Array<string>) : Channel
 
-     /**
-      * Register a callback on certain tag.
-      * @param function A callback to register
-      * @param string   A tag to register the callback for
-      * @return Channel
-      */
-     public register(handler:EventHandler, tag:string|null) : Channel
+    /**
+     * Register a callback on certain tag.
+     * @param function A callback to register
+     * @param string   A tag to register the callback for
+     * @return Channel
+     */
+    public register(handler:EventHandler, tag:string|null) : Channel
 
-     /**
-      * Register a callback. No tags.
-      * @param function
-      * @return Channel
-      */
-     public register(handler:EventHandler) : Channel
+    /**
+     * Register a callback. No tags.
+     * @param function
+     * @return Channel
+     */
+    public register(handler:EventHandler) : Channel
 
-     // the implementation
-     public register(...args:Array<any>) : Channel
-     {
-         // destruct the parameters
-         let [handler, t] = args;
+    // the implementation
+    public register(...args:Array<any>) : Channel
+    {
+        // destruct the parameters
+        let [handler, t] = args;
 
-         // is the tag input an array? then we need to special handle it
-         if (Array.isArray(t)) {
+        // is the tag input an array? then we need to special handle it
+        if (Array.isArray(t)) {
 
-             // register callback for each tag
-             if (t.length) t.forEach(tag => this.register(handler, tag));
+            // register callback for each tag
+            if (t.length) t.forEach(tag => this.register(handler, tag));
 
-             // no tags to register? then just call the register method
-             else this.register(handler);
-         }
+            // no tags to register? then just call the register method
+            else this.register(handler);
+        }
 
-         // just register it under the tag
-         else this._callbacks.push([t || null, handler]);
+        // just register it under the tag
+        else this._callbacks.push([t || null, handler]);
 
-         // allow chaining
-         return this;
-     }
+        // allow chaining
+        return this;
+    }
 
-     /**
-      * Unregister the callback.
-      * @param  function    The event handler to unregister.
-      * @param  Array       An array of tags
-      * @return Channel
-      */
-     public unregister(handler:EventHandler, tags:Array<string>) : Channel
+    /**
+     * Unregister the callback.
+     * @param  function    The event handler to unregister.
+     * @param  Array       An array of tags
+     * @return Channel
+     */
+    public unregister(handler:EventHandler, tags:Array<string>) : Channel
 
-     /**
-      * Unregister the callback.
-      * @param  function    The event handler to unregister.
-      * @param  string      The tag to unregister the handler for.
-      * @return Channel
-      */
-     public unregister(handler:EventHandler, tag:string|null) : Channel
+    /**
+     * Unregister the callback.
+     * @param  function    The event handler to unregister.
+     * @param  string      The tag to unregister the handler for.
+     * @return Channel
+     */
+    public unregister(handler:EventHandler, tag:string|null) : Channel
 
      /**
       * Unregister the callback from all possible callbacks.
@@ -94,24 +94,24 @@
       */
      public unregister(handler:EventHandler) : Channel
 
-     // the implementation
-     public unregister(...args:Array<any>) : Channel
-     {
-         // destruct the arguments into pieces
-         let [handler, t] = args;
+    // the implementation
+    public unregister(...args:Array<any>) : Channel
+    {
+        // destruct the arguments into pieces
+        let [handler, t] = args;
 
-         // do we have an array of tags to unregister we need to call the method many times
-         if (Array.isArray(t)) {
+        // do we have an array of tags to unregister we need to call the method many times
+        if (Array.isArray(t)) {
 
-             // call the unregister for each tag
-             t.forEach(t => this.unregister(handler, t));
+            // call the unregister for each tag
+            t.forEach(t => this.unregister(handler, t));
 
-             // allow chaining
-             return this;
-         }
+            // allow chaining
+            return this;
+        }
 
-         // filter out all callbacks matching the passed handler
-         this._callbacks = this._callbacks.filter(([tag, callback]) => {
+        // filter out all callbacks matching the passed handler
+        this._callbacks = this._callbacks.filter(([tag, callback]) => {
 
             // tags don't match? then it's ok
             if (t && t != tag) return true;
@@ -121,34 +121,34 @@
 
             // we want to remove all callbackas matching the handler
             return handler != callback
-         });
+        });
 
-         // allow chaining
-         return this;
-     }
+        // allow chaining
+        return this;
+    }
 
-     /**
-      *  Trigger a specific event on this channel.
-      *  @param Event   The event to trigger on this channel.
-      */
-     public trigger(event:Event) : void
-     {
-         // iterate over the callbacks and try to trigger the event properly
-         for (let [tag, handler] of this._callbacks) {
+    /**
+     *  Trigger a specific event on this channel.
+     *  @param Event   The event to trigger on this channel.
+     */
+    public trigger(event:Event) : void
+    {
+        // iterate over the callbacks and try to trigger the event properly
+        for (let [tag, handler] of this._callbacks) {
 
-             // if the tag of the handler is null or the event tags include
-             // the tag of the handler we want to call the event handler
-             if (tag == null || event.tags.includes(tag)) handler(event);
-         }
-     }
+            // the tag of the handler we want to call the event handler
+            // if the tag of the handler is null or the event tags include
+            if (tag == null || event.tags.includes(tag)) handler(event);
+        }
+    }
 
-     /**
-      * How many different callbacks are registered in this channel?
-      * @return int
-      */
-     public get size() : number
-     {
-         // return the length of our callbacks
-         return this._callbacks.length;
-     }
- };
+    /**
+     * How many different callbacks are registered in this channel?
+     * @return int
+     */
+    public get size() : number
+    {
+        // return the length of our callbacks
+        return this._callbacks.length;
+    }
+};
