@@ -26,25 +26,14 @@ export class Federation extends Emitter {
      public add(emitter:Emitter, tag:string | Array<string>) : Federation;
      public add(emitter:Emitter) : Federation;
 
-     /**
-      * Add a new federation to the federation. The added federation will be added
-      * with a certain name(s) so that it would be possible to distinguish events from
-      * this federation later on.
-      * @param Federation   A federation instance
-      * @param string|array Either one tag or an array of tags to associate
-      *                     with this emitter.
-      * @return Federation
-      */
-     public add(federation:Federation, tag:string | Array<string>) : Federation;
-     public add(federation:Federation) : Federation;
-
      // the actual implementation
      public add(...args:Array<any>) : Federation {
+         
          // destruct the arguments
          let [target, t] = args;
 
          // make the target bubble to this federation
-         target.bubbleTo(this);
+         target.bubbleTo(this, t);
 
          // allow chaining
          return this;

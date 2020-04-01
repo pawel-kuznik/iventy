@@ -43,5 +43,28 @@ describe('Federation', () => {
             // trigger test event
             emitter.trigger('test');
         });
+
+        it('should make sure that events triggered on added emitter are triggered on fedetaion and can extend tags', done => {
+
+            // construct federation and an emitter
+            let federation = new Federation();
+            let emitter = new Emitter();
+
+            // add the emitter
+            federation.add(emitter, 'tag');
+
+            // install an event handler on test channel
+            federation.on('test', event => {
+
+                // make sure we have the tag
+                expect(event.tags).to.have.members([ 'tag' ]);
+
+                // done
+                done();
+            });
+
+            // trigger test event
+            emitter.trigger('test');
+        });
     });
 });
