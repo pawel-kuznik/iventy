@@ -27,7 +27,7 @@ export class Emitter {
      *  All instances we want to bubble our events to.
      *  @var    Set<Emitter>
      */
-    private _bubbleTo:Set<Emitter> = new Set();
+    private _bubbleTo:Set<[Emitter, Array<string>]> = new Set();
 
     /**
      *  The constructor
@@ -76,7 +76,11 @@ export class Emitter {
         if (callbacks) callbacks.trigger(event);
 
         // should we bubble the event further? but only when it was not stopped
-        if (!event.isStopped) this._bubbleTo.forEach(handler => handler.trigger(event));
+        if (!event.isStopped) this._bubbleTo.forEach(([handler, tags]) => {
+
+            // make the handler trigger an extended event (with the tags)
+            handler.trigger(event.extendEvent(tags));
+        });
 
         // return the triggered event
         return event;
@@ -154,14 +158,21 @@ export class Emitter {
 
     /**
      *  This is a function that will allow to bubble an event to another emitter
-     *
-     *  @param  EventEmitter
+     *  @param  EventEmitter    The emitter it should bubble to.
+     *  @param  Array           An optional array of tags (or single tag) that
+     *                          the bubbled event will be extended with.
      *  @return Emitter
      */
-    public bubbleTo(target:Emitter) : Emitter {
+    public bubbleTo(target:Emitter, tags:Array<string>|string|null = null) : Emitter {
+
+        // make sure tags are an array
+        if (typeof(tags) == 'string') tags = [ tags ];
+
+        // no tags at all? then just assign an array
+        if (tags == null) tags = [];
 
         // set new target
-        this._bubbleTo.add(target);
+        this._bubbleTo.add([target, tags ? tags : []]);
 
         // allow chaining
         return this;

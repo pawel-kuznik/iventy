@@ -64,16 +64,39 @@ export class Designator {
     }
 
     /**
+     *  Get access to an array of tags associated with this designator.
+     *  @return Array
+     */
+    get tags() : Array<string> {
+
+        // copy an array so nobody can modify it
+        return Array.from(this._tags);
+    }
+
+    /**
      *  Extend the designator with a specific tag.
      *  @param  string  Tag string
      *  @return Designator
      */
-    extend(tag:string) : Designator {
+    extend(tag:Array<string>) : Designator;
+
+    /**
+     *  Extend the designator with a specific tag.
+     *  @param  string  Tag string
+     *  @return Designator
+     */
+    extend(tag:string) : Designator;
+
+    // the implementation
+    extend(t:any) : Designator {
+
+        // not an array? then wrap it in an array
+        if (!Array.isArray(t)) t = [ t ];
 
         // construct new designator based on a string. It doesn't really matter
         // the tags are unique or not cause our constructor will make sure that
         // they are.
-        return new Designator(constructString(this._type, [tag, ...this._tags]));
+        return new Designator(constructString(this._type, [...t, ...this._tags]));
     }
 
     /**

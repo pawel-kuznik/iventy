@@ -24,14 +24,10 @@ import { Designator } from './Designator';
 export class Event {
 
     /**
-     *  The event type.
+     *  The designator of the event.
+     *  @var Designator
      */
-    private _type:string;
-
-    /**
-     *  The tags associated with the event.
-     */
-    private _tags:Array<string> = [];
+    private readonly _designator:Designator;
 
     /**
      *  The data associated with the event.
@@ -64,12 +60,10 @@ export class Event {
      */
     public constructor(type:string, data:object, target:Emitter | null  = null, prev:Event | null = null) {
 
-        // split the type by a dot
-        let parts = type.split('.');
+        // construct event designator
+        this._designator = new Designator(type);
 
-        // assign the basic data
-        this._type = parts[0];
-        this._tags = parts.slice(1);
+        // assign additional data
         this._data = data;
         this._target = target;
         this._prev = prev;
@@ -96,8 +90,9 @@ export class Event {
 
     /**
      *  Stop the event
+     *  @return Event   Same event for chaining
      */
-    public stop() : Event | null
+    public stop() : Event
     {
         // mark the event as stopped
         this._stopped = true;
@@ -113,17 +108,15 @@ export class Event {
 
     /**
      *  Return the type of the event.
-     *
      *  @return string
      */
-    public get type() : string { return this._type; }
+    public get type() : string { return this._designator.name; }
 
     /**
      *  Get access to tags assigend to this event.
-     *
      *  @return Array
      */
-    public get tags() : Array<string> { return Array.from(this._tags); }
+    public get tags() : Array<string> { return this._designator.tags; }
 
     /**
      *  The data associated with the event.
@@ -158,5 +151,17 @@ export class Event {
 
         // return new event instance
         return new Event(name, data, target || this._target, this);
+    }
+
+    /**
+     *  Create a new extended event. An extended event is same as this one, but
+     *  it has an additional set of tags. This is useful when we want to bubble
+     *  events but as they bubble they need to get more tags assigned to them.
+     *  @param  Array   An array of tag strings.
+     */
+    extendEvent(tags:Array<string>) : Event {
+
+        // create a new event that is based on an extended
+        return new Event(this._designator.extend(tags).toString(), this._data, this._target, this._prev);
     }
 };
