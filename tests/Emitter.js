@@ -176,5 +176,28 @@ describe('Emitter', () => {
                 if (one && two) done();
             });
         });
+
+        it('should bubble event and assign additional tags', done => {
+
+            // construct two event emitters
+            const emitterOne = new Emitter(), emitterTwo = new Emitter();
+
+            // make the emitter one bubble all events to emitter two and assign
+            // special tag
+            emitterOne.bubbleTo(emitterTwo, 'tag');
+
+            // install a test handler on emitter two
+            emitterTwo.on('test', event => {
+
+                // make sure tags have the tag we assigned to the bubble
+                expect(event.tags).to.have.members([ 'tag' ]);
+
+                // done
+                done();
+            });
+
+            //  trigger test event
+            emitterOne.trigger('test');
+        });
     });
 });
