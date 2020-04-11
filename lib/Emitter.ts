@@ -50,6 +50,23 @@ export class Emitter {
     public trigger(name:string, data:object, previousEvent:Event | null) : Event;
 
     /**
+     *  Trigger event based on a name.
+     *
+     *  @param  string  The name of the channel of the event.
+     *  @param  mixed   (Optional) The object of the event.
+     *  @return Iventy.Event    The triggered event.
+     */
+    public trigger(name:string, data:object) : Event;
+
+    /**
+     *  Trigger event based on a name.
+     *
+     *  @param  string  The name of the channel of the event.
+     *  @return Iventy.Event    The triggered event.
+     */
+    public trigger(name:string) : Event;
+
+    /**
      *  Trigger event on the emitter.
      *
      *  @param  Iventy.Event    The event instance that should be triggered.
@@ -64,7 +81,7 @@ export class Emitter {
         let [name, data, prev] = args;
 
         // check if we have a string
-        if (typeof(name) == 'string') return this.trigger(this.createEvent(name, data, prev));
+        if (typeof(name) == 'string') return this.trigger(this.createEvent(name, data || { }, prev || null));
 
         // we are in the first overload
         let event = name;
