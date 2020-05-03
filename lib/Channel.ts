@@ -87,12 +87,12 @@ export class Channel {
      */
     public unregister(handler:EventHandler, tag:string|null) : Channel
 
-     /**
-      * Unregister the callback from all possible callbacks.
-      * @param  function    The event handler to unregister.
-      * @return Channel
-      */
-     public unregister(handler:EventHandler) : Channel
+    /**
+     * Unregister the callback from all possible callbacks.
+     * @param  function    The event handler to unregister.
+     * @return Channel
+     */
+    public unregister(handler:EventHandler) : Channel
 
     // the implementation
     public unregister(...args:Array<any>) : Channel
@@ -104,7 +104,7 @@ export class Channel {
         if (Array.isArray(t)) {
 
             // call the unregister for each tag
-            t.forEach(t => this.unregister(handler, t));
+            t.forEach(tag => void this.unregister(handler, tag));
 
             // allow chaining
             return this;

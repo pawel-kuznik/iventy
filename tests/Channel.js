@@ -91,6 +91,44 @@ describe('Channel', () => {
             // expect to have a callback
             expect(channel.size).to.be.equal(1);
         });
+
+        it('should unregister callbacks by an array of tags', () => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // the handler
+            const handler = event => { };
+
+            // register a callback
+            channel.register(handler);
+            channel.register(handler, 'tag1');
+
+            // unregister the callback
+            channel.unregister(handler, [ 'tag1' ]);
+
+            // expect to have a callback
+            expect(channel.size).to.be.equal(1);
+        });
+
+        it('should unregister callbacks by an empty array', () => {
+
+            // create a channel
+            const channel = new Channel();
+
+            // the handler
+            const handler = event => { };
+
+            // register a callback
+            channel.register(handler);
+            channel.register(handler, 'tag1');
+
+            // unregister the callback
+            channel.unregister(handler, [ ]);
+
+            // expect to have a callback
+            expect(channel.size).to.be.equal(2);
+        });
     });
 
     describe('.trigger()', () => {
