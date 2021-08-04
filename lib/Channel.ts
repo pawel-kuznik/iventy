@@ -77,7 +77,7 @@ export class Channel {
      * @param  Array       An array of tags
      * @return Channel
      */
-    public unregister(handler:EventHandler, tags:Array<string>) : Channel
+    public unregister(handler:EventHandler, tags:Array<string>|null) : Channel
 
     /**
      * Unregister the callback.

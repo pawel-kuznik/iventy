@@ -167,7 +167,7 @@ export class Emitter {
         if (channelName && callback == null && tags.length == 0) this._channels.delete(channelName);
 
         // do we have a channel name and callback? they ask the callbacks to unregister it (with possible tags)
-        if (channelName && callback) callbacks.unregister(callback, tags)
+        if (channelName && callback) callbacks.unregister(callback, tags.length ? tags : null);
 
         // allow chaining
         return this;

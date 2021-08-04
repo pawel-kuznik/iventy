@@ -133,6 +133,30 @@ describe('Emitter', () => {
         });
     });
 
+    describe('.off', () => {
+
+        it('should remove previously installed callback', () => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            const callback = () => {
+
+                // we are done here
+                throw new Error('do not handle this');
+            };
+
+            // install a callback
+            emitter.on('test', callback);
+
+            // remove the callback
+            emitter.off('test', callback);
+
+            // trigger the event
+            emitter.trigger('test');
+        });
+    });
+
     describe('.bubbleTo()', () => {
 
         it('should bubble events from one emitter to another', done => {
