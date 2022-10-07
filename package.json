@@ -1,6 +1,6 @@
 {
-  "name": "iventy",
-  "version": "2.0.1",
+  "name": "@pawel-kuznik/iventy",
+  "version": "2.0.2",
   "description": "An event lib for js.",
   "main": "build/iventy.js",
   "types": "build/iventy.d.ts",
