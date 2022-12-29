@@ -1,14 +1,4 @@
-/**
- *  This is a test file for the Designator class.
- *
- *  @author     Pawel Kuznik <pawel.kuznik@gmail.com>
- */
-
-// the testing method
-const expect = require('chai').expect;
-
-// the Designator class to text
-const Designator = require('../build/lib/Designator.js').Designator;
+import { Designator } from "../build/lib/Designator";
 
 describe('Designator', () => {
 
@@ -20,7 +10,7 @@ describe('Designator', () => {
             const d = new Designator('test');
 
             // expect the name to be the test string
-            expect(d.name).to.be.equal('test');
+            expect(d.name).toEqual('test');
         });
 
         it('should not include tags', () => {
@@ -29,8 +19,8 @@ describe('Designator', () => {
             const d = new Designator('test.tag');
 
             // expect the name not contain a tag or dot
-            expect(d.name).to.not.contain('tag');
-            expect(d.name).to.not.contain('.');
+            expect(d.name).not.toContain('tag');
+            expect(d.name).not.toContain('.');
         });
     });
 
@@ -43,7 +33,7 @@ describe('Designator', () => {
             const d2 = d.extend('tag');
 
             // the name should be the same
-            expect(d.name).to.equal(d2.name);
+            expect(d.name).toEqual(d2.name);
         });
 
         it('should contain the new tag', () => {
@@ -53,8 +43,8 @@ describe('Designator', () => {
             const d2 = d.extend('tag');
 
             // the name should be the same
-            expect(d2.has('tag')).to.be.true;
-            expect(d.has('tag')).to.be.false;
+            expect(d2.has('tag')).toEqual(true);
+            expect(d.has('tag')).toEqual(false);
         });
     });
 
@@ -67,7 +57,7 @@ describe('Designator', () => {
             const d2 = d.reduce('tag');
 
             // name should be preserved
-            expect(d.name).to.equal(d2.name);
+            expect(d.name).toEqual(d2.name);
         });
 
         it('should contain the new tag', () => {
@@ -77,8 +67,8 @@ describe('Designator', () => {
             const d2 = d.reduce('tag');
 
             // the tag should be missing
-            expect(d2.has('tag')).to.be.false;
-            expect(d.has('tag')).to.be.true;
+            expect(d2.has('tag')).toEqual(false);
+            expect(d.has('tag')).toEqual(true);
         });
     });
 
@@ -90,7 +80,7 @@ describe('Designator', () => {
             const d = new Designator('test.tag');
 
             // should be there
-            expect(d.has('tag')).to.be.true;
+            expect(d.has('tag')).toEqual(true);
         });
 
         it('should say no if the tag is not there', () => {
@@ -99,7 +89,7 @@ describe('Designator', () => {
             const d = new Designator('test.tag');
 
             // should not be there
-            expect(d.has('blabla')).to.be.false;
+            expect(d.has('blabla')).toEqual(false);
         });
     });
 
@@ -112,7 +102,7 @@ describe('Designator', () => {
             const d2 = new Designator('test');
 
             // d1 should be in d2 (cause names match)
-            expect(d1.isWithin(d2)).to.be.true;
+            expect(d1.isWithin(d2)).toEqual(true);
         });
 
         it('should tell that a smaller designator is witing a larger one', () => {
@@ -122,7 +112,7 @@ describe('Designator', () => {
             const d2 = new Designator('test.tag.another-tag');
 
             // d1 should be in d2 (cause it's smaller)
-            expect(d1.isWithin(d2)).to.be.true;
+            expect(d1.isWithin(d2)).toEqual(true);
         });
 
         it('should not match if the other one has a missing tag', () => {
@@ -132,7 +122,7 @@ describe('Designator', () => {
             const d2 = new Designator('test.tag');
 
             // d1 should not be in d2
-            expect(d1.isWithin(d2)).to.be.false;
+            expect(d1.isWithin(d2)).toEqual(false);
         });
 
         it('should not match if names do not match even when tags match', () => {
@@ -142,7 +132,7 @@ describe('Designator', () => {
             const d2 = new Designator('different.tag');
 
             // d1 should not be in d2
-            expect(d1.isWithin(d2)).to.be.false;
+            expect(d1.isWithin(d2)).toEqual(false);
         });
     });
 
@@ -155,7 +145,7 @@ describe('Designator', () => {
             const d2 = new Designator('test');
 
             // d1 should be equal d2 (cause names match)
-            expect(d1.equals(d2)).to.be.true;
+            expect(d1.equals(d2)).toEqual(true);
         });
 
         it('should match with tags', () => {
@@ -165,7 +155,7 @@ describe('Designator', () => {
             const d2 = new Designator('test.tag');
 
             // d1 should be equal d2
-            expect(d1.equals(d2)).to.be.true;
+            expect(d1.equals(d2)).toEqual(true);
         });
 
         it('should not match if tag is missing from first one', () => {
@@ -175,7 +165,7 @@ describe('Designator', () => {
             const d2 = new Designator('test.tag.addintional');
 
             // d1 should not be in d2
-            expect(d1.equals(d2)).to.be.false;
+            expect(d1.equals(d2)).toEqual(false);
         });
 
         it('should not match if tag is missing from second one', () => {
@@ -185,7 +175,7 @@ describe('Designator', () => {
             const d2 = new Designator('test.tag');
 
             // d1 should not be in d2
-            expect(d1.equals(d2)).to.be.false;
+            expect(d1.equals(d2)).toEqual(false);
         });
 
         it('should not match if names do not match even when tags match', () => {
@@ -195,7 +185,7 @@ describe('Designator', () => {
             const d2 = new Designator('different.tag');
 
             // d1 should not be in d2
-            expect(d1.equals(d2)).to.be.false;
+            expect(d1.equals(d2)).toEqual(false);
         });
     });
 });
