@@ -1,15 +1,5 @@
-/**
- *  This is the test file for the Event class.
- *
- *  @author     Pawel Kuznik <pawel.kuznik@gmail.com>
- */
-
-// the testing method
-const expect = require('chai').expect;
-
-// the Event class to text
-const Event = require('../build/iventy.js').Event;
-const Emitter = require('../build/iventy.js').Emitter;
+import { Emitter } from "./Emitter";
+import { Event } from "./Event";
 
 // start testing the Event class
 describe('Event', () => {
@@ -23,11 +13,13 @@ describe('Event', () => {
             let event = new Event('test', { foo: 1 });
 
             // test the properties
-            expect(event).to.have.property('type').and.equal('test');
-            expect(event).to.have.property('data').and.be.an('object').and.have.property('foo').and.equal(1);
-            expect(event).to.have.property('target').and.equal(null);
-            expect(event).to.have.property('previous').and.equal(null);
-            expect(event).to.have.property('isPrevented').and.equal(false);
+            expect(event).toHaveProperty('type', 'test');
+            expect(event).toHaveProperty('data');
+            expect(typeof event.data).toEqual('object');
+            expect(event.data).toHaveProperty('foo', 1);
+            expect(event).toHaveProperty('target', null);
+            expect(event).toHaveProperty('previous', null);
+            expect(event).toHaveProperty('isPrevented', false);
         });
 
         it('should create an event with an emitter as target', () => {
@@ -39,7 +31,7 @@ describe('Event', () => {
             let event = new Event('test', undefined, emitter);
 
             // expect the event to have the emitter as target
-            expect(event).to.have.property('target').and.equal(emitter);
+            expect(event).toHaveProperty('target', emitter);
         });
 
         it('should create an event based on another event', () => {
@@ -54,8 +46,8 @@ describe('Event', () => {
             let event = new Event('test', undefined, emitter, one);
 
             // make sure the event is properly constructed
-            expect(event).to.have.property('previous').and.equal(one);
-            expect(event).to.have.property('target').and.equal(one.target);
+            expect(event).toHaveProperty('previous', one);
+            expect(event).toHaveProperty('target', one.target);
         });
 
         it('should assign tags from the type name', () => {
@@ -64,10 +56,10 @@ describe('Event', () => {
             let event = new Event('test.tag1');
 
             // expect tags in the event
-            expect(event.tags).to.have.lengthOf(1);
+            expect(event.tags).toHaveLength(1);
 
             // expect proper tag
-            expect(event.tags[0]).to.equal('tag1');
+            expect(event.tags[0]).toEqual('tag1');
         });
     });
 
@@ -83,7 +75,7 @@ describe('Event', () => {
             event.prevent();
 
             // check if the prevented changed
-            expect(event).to.have.property('isPrevented').and.equal(true);
+            expect(event).toHaveProperty('isPrevented', true);
         });
     });
 
@@ -99,7 +91,8 @@ describe('Event', () => {
             let next = base.createEvent('next');
 
             // check if next is really and event and is based on the base event
-            expect(next).to.be.instanceof(Event).and.have.property('previous').and.equal(base);
+            expect(next).toBeInstanceOf(Event);
+            expect(next).toHaveProperty('previous', base);
         });
     });
 });

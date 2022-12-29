@@ -1,17 +1,6 @@
-/**
- *  This is a test file for the Channel class.
- *
- *  @author     Pawel Kuznik <pawel.kuznik@gmail.com>
- */
+import { Channel } from "./Channel";
+import { Event } from "./Event";
 
-// the testing method
-const expect = require('chai').expect;
-
-// the Channel class to text
-const Channel = require('../build/lib/Channel.js').Channel;
-const IventyEvent = require('../build/lib/Event.js').Event;
-
-// start the test of the Emitter class
 describe('Channel', () => {
 
     describe('.register()', () => {
@@ -25,7 +14,7 @@ describe('Channel', () => {
             channel.register(event => { });
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(1);
+            expect(channel.size).toEqual(1);
         });
 
         it('should register a callback with a tag', () => {
@@ -37,7 +26,7 @@ describe('Channel', () => {
             channel.register(event => { }, 'tag1');
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(1);
+            expect(channel.size).toEqual(1);
         });
 
         it('should register a callbacks for each tag', () => {
@@ -49,7 +38,7 @@ describe('Channel', () => {
             channel.register(event => { }, [ 'tag1', 'tag2' ]);
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(2);
+            expect(channel.size).toEqual(2);
         });
     });
 
@@ -61,7 +50,7 @@ describe('Channel', () => {
             const channel = new Channel();
 
             // the handler
-            const handler = event => { };
+            const handler = () => { };
 
             // register a callback
             channel.register(handler);
@@ -70,7 +59,7 @@ describe('Channel', () => {
             channel.unregister(handler);
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(0);
+            expect(channel.size).toEqual(0);
         });
 
         it('should unregister callbacks by tag', () => {
@@ -79,7 +68,7 @@ describe('Channel', () => {
             const channel = new Channel();
 
             // the handler
-            const handler = event => { };
+            const handler = () => { };
 
             // register a callback
             channel.register(handler);
@@ -89,7 +78,7 @@ describe('Channel', () => {
             channel.unregister(handler, 'tag1');
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(1);
+            expect(channel.size).toEqual(1);
         });
 
         it('should unregister callbacks by an array of tags', () => {
@@ -98,7 +87,7 @@ describe('Channel', () => {
             const channel = new Channel();
 
             // the handler
-            const handler = event => { };
+            const handler = () => { };
 
             // register a callback
             channel.register(handler);
@@ -108,7 +97,7 @@ describe('Channel', () => {
             channel.unregister(handler, [ 'tag1' ]);
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(1);
+            expect(channel.size).toEqual(1);
         });
 
         it('should unregister callbacks by an empty array', () => {
@@ -117,7 +106,7 @@ describe('Channel', () => {
             const channel = new Channel();
 
             // the handler
-            const handler = event => { };
+            const handler = () => { };
 
             // register a callback
             channel.register(handler);
@@ -127,7 +116,7 @@ describe('Channel', () => {
             channel.unregister(handler, [ ]);
 
             // expect to have a callback
-            expect(channel.size).to.be.equal(2);
+            expect(channel.size).toEqual(2);
         });
     });
 
@@ -146,7 +135,7 @@ describe('Channel', () => {
             });
 
             // trigger an event on the channel
-            channel.trigger(new IventyEvent('test'));
+            channel.trigger(new Event('test'));
         });
 
         it('should trigger an event on certain tag', (done) => {
@@ -162,7 +151,7 @@ describe('Channel', () => {
             }, 'tag1');
 
             // trigger an event on the channel
-            channel.trigger(new IventyEvent('test.tag1'));
+            channel.trigger(new Event('test.tag1'));
         });
 
         it('should invoke general callback regardless of tag', (done) => {
@@ -178,7 +167,7 @@ describe('Channel', () => {
             });
 
             // trigger an event on the channel
-            channel.trigger(new IventyEvent('test.tag1'));
+            channel.trigger(new Event('test.tag1'));
         });
 
         it('should not invoke not matching callbacks', () => {
@@ -194,7 +183,7 @@ describe('Channel', () => {
             }, 'tag2');
 
             // trigger an event on the channel
-            channel.trigger(new IventyEvent('test.tag1'));
+            channel.trigger(new Event('test.tag1'));
         });
     });
 });

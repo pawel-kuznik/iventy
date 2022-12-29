@@ -1,14 +1,4 @@
-/**
- *  This is a test file for the Emitter class.
- *
- *  @author     Pawel Kuznik <pawel.kuznik@gmail.com>
- */
-
-// the testing method
-const expect = require('chai').expect;
-
-// the Event class to text
-const Emitter = require('../build/iventy.js').Emitter;
+import { Emitter } from "./Emitter";
 
 // start the test of the Emitter class
 describe('Emitter', () => {
@@ -21,7 +11,7 @@ describe('Emitter', () => {
             let emitter = new Emitter();
 
             // really an emitter?
-            expect(emitter).to.be.instanceof(Emitter);
+            expect(emitter).toBeInstanceOf(Emitter);
         });
     });
 
@@ -39,7 +29,7 @@ describe('Emitter', () => {
             emitter.on('test', triggeredEvent => {
 
                 // it should be the same event
-                expect(event).to.equal(triggeredEvent);
+                expect(event).toEqual(triggeredEvent);
 
                 // we are done
                 done();
@@ -55,7 +45,7 @@ describe('Emitter', () => {
             let emitter = new Emitter();
 
             // install a callback
-            emitter.on('test', triggeredEvent => {
+            emitter.on('test', () => {
 
                 // we are done here
                 done();
@@ -214,7 +204,7 @@ describe('Emitter', () => {
             emitterTwo.on('test', event => {
 
                 // make sure tags have the tag we assigned to the bubble
-                expect(event.tags).to.have.members([ 'tag' ]);
+                expect(event.tags).toContain('tag');
 
                 // done
                 done();
