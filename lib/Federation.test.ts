@@ -1,17 +1,5 @@
-/**
- *  This is a test file for the Federation class.
- *
- *  @author     Pawel Kuznik <pawel.kuznik@gmail.com>
- */
-
-// the testing method
-const expect = require('chai').expect;
-
-// the Event class to text
-const Federation = require('../build/iventy.js').Federation;
-const Emitter = require('../build/iventy.js').Emitter;
-
-// start the test of the Emitter class
+import { Emitter } from "./Emitter";
+import { Federation } from "./Federation";
 describe('Federation', () => {
 
     describe('.constructor()', () => {
@@ -22,7 +10,7 @@ describe('Federation', () => {
             let emitter = new Federation();
 
             // really an federation?
-            expect(emitter).to.be.instanceof(Federation);
+            expect(emitter).toBeInstanceOf(Federation);
         });
     });
 
@@ -57,7 +45,7 @@ describe('Federation', () => {
             federation.on('test', event => {
 
                 // make sure we have the tag
-                expect(event.tags).to.have.members([ 'tag' ]);
+                expect(event.tags).toContain('tag');
 
                 // done
                 done();
