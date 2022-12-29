@@ -58,7 +58,7 @@ export class Event {
      *  @param  Emitter The emitter that triggers this event.
      *  @param  Event   The previous event in chain that lead to this event.
      */
-    public constructor(type:string, data:object, target:Emitter | null  = null, prev:Event | null = null) {
+    public constructor(type:string, data:object = { }, target:Emitter | null  = null, prev:Event | null = null) {
 
         // construct event designator
         this._designator = new Designator(type);

@@ -1,4 +1,4 @@
-import { Designator } from "../build/lib/Designator";
+import { Designator } from "./Designator";
 
 describe('Designator', () => {
 
