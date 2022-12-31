@@ -42,6 +42,28 @@ describe('Channel', () => {
         });
     });
 
+    describe('.observe()', () => {
+
+        it('should register a callback', done => {
+
+            const channel = new Channel();
+            channel.observe(() => done());
+
+            channel.trigger(new Event('test'));
+        });
+
+        it('unregister a callback if uninstall is called', done => {
+
+            const channel = new Channel();
+            const uninstall = channel.observe(() => { throw Error('Should not happen'); });
+            uninstall();
+
+            channel.trigger(new Event('test'));
+
+            setTimeout(() => done(), 100); 
+        });
+    });
+
     describe('.unregister()', () => {
 
         it('should unregister same callback', () => {
