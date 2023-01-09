@@ -4,13 +4,8 @@
  *  a worker, over an RTC, or on a server. The events triggered and handled
  *  across all of these parts can be transfered like they would be part of
  *  the same context.
- *
- *  @author Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
-
-/// <reference path="Event.ts" />
-/// <reference path="Emitter.ts" />
 import { Event } from "./Event";
 import { Emitter } from "./Emitter";
 
@@ -31,7 +26,7 @@ export class Port {
     public consume(data:object) {
 
         // the construct an event
-        const event = new Event(object.type, object.data);
+        const event = new Event(data.type, data.data);
 
         // iterate over all emitters we should bubble the events to
         this._bubbleTo.forEach(([handler, tags]) => {

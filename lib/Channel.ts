@@ -123,7 +123,7 @@ export class Channel {
     /**
      *  Trigger a specific event on this channel.
      */
-    public trigger(event:Event) : void
+    public trigger(event:Event<any>) : void
     {
         // iterate over the callbacks and try to trigger the event properly
         for (let [tag, handler] of this._callbacks) {

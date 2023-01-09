@@ -16,7 +16,7 @@ import { Packet } from "./Packet";
  *
  *      type.tag1.tag2.tag3
  */
-export class Event extends Packet {
+export class Event<TPayload> extends Packet<TPayload> {
 
     /**
      *  The designator of the event.
@@ -31,7 +31,7 @@ export class Event extends Packet {
     /**
      *  The previous event in the chain of events.
      */
-    private readonly _prev:Event | null;
+    private readonly _prev:Event<any> | null;
 
     /**
      *  Flags to tell if the event is stopped or prevented.
@@ -43,11 +43,11 @@ export class Event extends Packet {
      *  The constructor
      *
      *  @param  sting   The channel type of the event.
-     *  @param  object   The data associated with the event.
+     *  @param  object  The data associated with the event.
      *  @param  Emitter The emitter that triggers this event.
      *  @param  Event   The previous event in chain that lead to this event.
      */
-    public constructor(type:string, data:object = { }, target:Emitter | null  = null, prev:Event | null = null) {
+    public constructor(type:string, data:TPayload, target:Emitter | null  = null, prev:Event<any> | null = null) {
 
         super(data);
 
@@ -62,7 +62,7 @@ export class Event extends Packet {
     /**
      *  Prevent the event.
      */
-    public prevent() : Event
+    public prevent() : this
     {
         // mark the event as prevented
         this._prevented = true;
@@ -79,7 +79,7 @@ export class Event extends Packet {
     /**
      *  Stop the event
      */
-    public stop() : Event
+    public stop() : this
     {
         // mark the event as stopped
         this._stopped = true;
@@ -106,25 +106,25 @@ export class Event extends Packet {
     /**
      *  The data associated with the event.
      */
-    public get data() : object { return this.payload; }
+    public get data() : TPayload { return this.payload; }
 
     /**
      *  Get the target of the event.
      */
-    public get target() : any { return this._target; }
+    public get target() : Emitter | null { return this._target; }
 
     /**
      *  Get the previos event in the chain.
      */
-    public get previous() : Event | null { return this._prev; }
+    public get previous() : Event<any> | null { return this._prev; }
 
     /**
      *  Create new event based on this one.
      */
-    createEvent(name:string , data = { }, target:Emitter | null = null) : Event {
+    createEvent<TNextPayload extends object>(name:string , data: TNextPayload, target:Emitter | null = null) : Event<TNextPayload> {
 
         // return new event instance
-        return new Event(name, data, target || this._target, this);
+        return new Event<TNextPayload>(name, data, target || this._target, this);
     }
 
     /**
@@ -132,7 +132,7 @@ export class Event extends Packet {
      *  it has an additional set of tags. This is useful when we want to bubble
      *  events but as they bubble they need to get more tags assigned to them.
      */
-    extendEvent(tags:Array<string>) : Event {
+    extendEvent(tags:Array<string>) : Event<TPayload> {
 
         // create a new event that is based on an extended
         return new Event(this._designator.extend(tags).toString(), this.data, this._target, this._prev);

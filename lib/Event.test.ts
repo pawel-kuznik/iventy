@@ -28,7 +28,7 @@ describe('Event', () => {
             let emitter = new Emitter();
 
             // construct a base event
-            let event = new Event('test', undefined, emitter);
+            let event = new Event('test', { }, emitter);
 
             // expect the event to have the emitter as target
             expect(event).toHaveProperty('target', emitter);
@@ -40,10 +40,10 @@ describe('Event', () => {
             let emitter = new Emitter();
 
             // construct a base event
-            let one = new Event('test', undefined, emitter);
+            let one = new Event('test', { }, emitter);
 
             // construct the event to test
-            let event = new Event('test', undefined, emitter, one);
+            let event = new Event('test', { }, emitter, one);
 
             // make sure the event is properly constructed
             expect(event).toHaveProperty('previous', one);
@@ -53,7 +53,7 @@ describe('Event', () => {
         it('should assign tags from the type name', () => {
 
             // construct an event
-            let event = new Event('test.tag1');
+            let event = new Event('test.tag1', { });
 
             // expect tags in the event
             expect(event.tags).toHaveLength(1);
@@ -69,7 +69,7 @@ describe('Event', () => {
         it('should change the .isPrevented property', () => {
 
             // construct the event
-            let event = new Event('test');
+            let event = new Event('test', { });
 
             // prevent the event
             event.prevent();
@@ -85,10 +85,10 @@ describe('Event', () => {
         it('should create a new event based on current one', () => {
 
             // construct base event
-            let base = new Event('test');
+            let base = new Event('test', { });
 
             // the next event
-            let next = base.createEvent('next');
+            let next = base.createEvent('next', { });
 
             // check if next is really and event and is based on the base event
             expect(next).toBeInstanceOf(Event);

@@ -23,7 +23,7 @@ describe('Emitter', () => {
             let emitter = new Emitter();
 
             // create an event
-            let event = emitter.createEvent('test');
+            let event = emitter.createEvent('test', { });
 
             // install a callback
             emitter.on('test', triggeredEvent => {

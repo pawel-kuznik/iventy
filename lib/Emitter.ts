@@ -7,9 +7,6 @@
  *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
-/// <reference path="EventHandler.ts" />
-/// <reference path="Event.ts" />
-/// <reference path="Channel.ts" />
 import { EventHandler } from "./EventHandler";
 import { Event } from "./Event";
 import { Channel } from "./Channel";
@@ -30,14 +27,6 @@ export class Emitter {
     private _bubbleTo:Set<[Emitter, Array<string>]> = new Set();
 
     /**
-     *  The constructor
-     */
-    public constructor () {
-
-        // nothing special
-    }
-
-    /**
      *  Trigger an event based on name, data and previous event.
      *
      *  @param  string  The name of the channel of the event.
@@ -47,7 +36,7 @@ export class Emitter {
      *
      *  @return Event   The triggered event.
      */
-    public trigger(name:string, data:object, previousEvent:Event | null) : Event;
+    public trigger<TPayload>(name:string, data:TPayload, previousEvent:Event<TPayload> | null) : Event<TPayload>;
 
     /**
      *  Trigger event based on a name.
@@ -56,7 +45,7 @@ export class Emitter {
      *  @param  mixed   (Optional) The object of the event.
      *  @return Iventy.Event    The triggered event.
      */
-    public trigger(name:string, data:object) : Event;
+    public trigger<TPayload>(name:string, data:TPayload) : Event<TPayload>;
 
     /**
      *  Trigger event based on a name.
@@ -64,7 +53,7 @@ export class Emitter {
      *  @param  string  The name of the channel of the event.
      *  @return Iventy.Event    The triggered event.
      */
-    public trigger(name:string) : Event;
+    public trigger<undefined>(name:string) : Event<undefined>;
 
     /**
      *  Trigger event on the emitter.
@@ -72,7 +61,7 @@ export class Emitter {
      *  @param  Iventy.Event    The event instance that should be triggered.
      *  @return Iventy.Event    The triggered event.
      */
-    public trigger(event:Event) : Event;
+    public trigger<TPayload>(event:Event<TPayload>) : Event<TPayload>;
 
     // the actual implementation
     public trigger(...args:Array<any>) : any
@@ -205,9 +194,9 @@ export class Emitter {
      *
      *  @return Event   The constructed event.
      */
-    public createEvent(name:string, data:object = { }, previousEvent:Event | null = null) : Event {
+    public createEvent<TPayload>(name:string, data:TPayload, previousEvent:Event<any> | null = null) : Event<TPayload> {
 
         // construct new event
-        return new Event(name, data, this, previousEvent);
+        return new Event<TPayload>(name, data, this, previousEvent);
     }
 };
