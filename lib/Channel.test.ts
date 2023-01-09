@@ -42,6 +42,28 @@ describe('Channel', () => {
         });
     });
 
+    describe('.observe()', () => {
+
+        it('should register a callback', done => {
+
+            const channel = new Channel();
+            channel.observe(() => done());
+
+            channel.trigger(new Event('test', { }));
+        });
+
+        it('unregister a callback if uninstall is called', done => {
+
+            const channel = new Channel();
+            const uninstall = channel.observe(() => { throw Error('Should not happen'); });
+            uninstall();
+
+            channel.trigger(new Event('test', { }));
+
+            setTimeout(() => done(), 100); 
+        });
+    });
+
     describe('.unregister()', () => {
 
         it('should unregister same callback', () => {
@@ -135,7 +157,7 @@ describe('Channel', () => {
             });
 
             // trigger an event on the channel
-            channel.trigger(new Event('test'));
+            channel.trigger(new Event('test', { }));
         });
 
         it('should trigger an event on certain tag', (done) => {
@@ -151,7 +173,7 @@ describe('Channel', () => {
             }, 'tag1');
 
             // trigger an event on the channel
-            channel.trigger(new Event('test.tag1'));
+            channel.trigger(new Event('test.tag1', { }));
         });
 
         it('should invoke general callback regardless of tag', (done) => {
@@ -167,7 +189,7 @@ describe('Channel', () => {
             });
 
             // trigger an event on the channel
-            channel.trigger(new Event('test.tag1'));
+            channel.trigger(new Event('test.tag1', { }));
         });
 
         it('should not invoke not matching callbacks', () => {
@@ -183,7 +205,7 @@ describe('Channel', () => {
             }, 'tag2');
 
             // trigger an event on the channel
-            channel.trigger(new Event('test.tag1'));
+            channel.trigger(new Event('test.tag1', { }));
         });
     });
 });

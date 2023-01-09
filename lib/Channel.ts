@@ -1,54 +1,48 @@
-/**
- *  This is a class to handle a single channel. A single channel is a collection
- *  of callbacks that an event instance might be triggered on.
- *
- *  The channel can handle tags. These tags are associated with callbacks and
- *  define if an event can be triggered in certain handlers.
- *
- *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
- */
-
-/// <reference path="EventHandler.ts" />
-/// <reference path="Event.ts" />
 import { EventHandler } from "./EventHandler";
 import { Event } from "./Event";
 
-// export the class
+/**
+ *  This is an interface describing a function that can uninstall a specific
+ *  event handler. This is returned from Channel methods.
+ */
+export interface EventHandlerUninstaller {
+    () : void;
+};
+
+/**
+ *  This is a class that represents a single notification channel. Such channel
+ *  allows for registering a collection of handlers. These handler are then executed
+ *  when `.trigger()` method is called.
+ * 
+ *  The channel also allows for registering handlers on specific collection of tags.
+ *  These tags should give an additional information about the specificity of
+ *  an event that should be handled.
+ */
 export class Channel {
 
     /**
      * An array containing all registered callbacks for each tag. Callbacks
      * registered under no callback are stored under null instead of tag name.
      * Each item in the array is a tuple tagname-callback.
-     * @var Array
      */
-     private _callbacks:Array<[string|null, EventHandler]> = [];
+    private _callbacks:Array<[string|null, EventHandler]> = [];
+
+    /**
+     * How many different callbacks are registered in this channel?
+     */
+    public get size() : number
+    {
+        // return the length of our callbacks
+        return this._callbacks.length;
+    }
 
     /**
      * Register a callback under each tag passed in the tags parameter. If the
      * array is empty, this call will behave like register(handler).
-     * @param function A callback to register
-     * @param Array    An array of tags to register the callback under
-     * @return Channel
      */
     public register(handler:EventHandler, tags:Array<string>) : Channel
-
-    /**
-     * Register a callback on certain tag.
-     * @param function A callback to register
-     * @param string   A tag to register the callback for
-     * @return Channel
-     */
     public register(handler:EventHandler, tag:string|null) : Channel
-
-    /**
-     * Register a callback. No tags.
-     * @param function
-     * @return Channel
-     */
     public register(handler:EventHandler) : Channel
-
-    // the implementation
     public register(...args:Array<any>) : Channel
     {
         // destruct the parameters
@@ -72,29 +66,28 @@ export class Channel {
     }
 
     /**
-     * Unregister the callback.
-     * @param  function    The event handler to unregister.
-     * @param  Array       An array of tags
-     * @return Channel
+     *  This is a methods that registers a specific handler similart to `.register()`
+     *  method, but also exposes a way to quickly stop observing a specific handler.
+     *  This is usefull when using frameworks like react or strict OOP practices
+     *  which follow open-close rule.
+     */
+    public observe(handler:EventHandler, tags:Array<string>) : EventHandlerUninstaller;
+    public observe(handler:EventHandler, tag:string|null) : EventHandlerUninstaller;
+    public observe(handler:EventHandler) : EventHandlerUninstaller;
+    public observe(...args:Array<any>) : EventHandlerUninstaller {
+
+        const [ handler, tags ] = args;
+        this.register(handler, tags);
+
+        return () => void this.unregister(handler);
+    }
+
+    /**
+     * Unregister a specific callback.
      */
     public unregister(handler:EventHandler, tags:Array<string>|null) : Channel
-
-    /**
-     * Unregister the callback.
-     * @param  function    The event handler to unregister.
-     * @param  string      The tag to unregister the handler for.
-     * @return Channel
-     */
     public unregister(handler:EventHandler, tag:string|null) : Channel
-
-    /**
-     * Unregister the callback from all possible callbacks.
-     * @param  function    The event handler to unregister.
-     * @return Channel
-     */
     public unregister(handler:EventHandler) : Channel
-
-    // the implementation
     public unregister(...args:Array<any>) : Channel
     {
         // destruct the arguments into pieces
@@ -129,9 +122,8 @@ export class Channel {
 
     /**
      *  Trigger a specific event on this channel.
-     *  @param Event   The event to trigger on this channel.
      */
-    public trigger(event:Event) : void
+    public trigger(event:Event<any>) : void
     {
         // iterate over the callbacks and try to trigger the event properly
         for (let [tag, handler] of this._callbacks) {
@@ -140,15 +132,5 @@ export class Channel {
             // if the tag of the handler is null or the event tags include
             if (tag == null || event.tags.includes(tag)) handler(event);
         }
-    }
-
-    /**
-     * How many different callbacks are registered in this channel?
-     * @return int
-     */
-    public get size() : number
-    {
-        // return the length of our callbacks
-        return this._callbacks.length;
     }
 };
