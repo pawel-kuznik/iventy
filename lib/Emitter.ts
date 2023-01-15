@@ -3,13 +3,11 @@
  *  event emitter allows to register a number of callbacks that should be
  *  triggered when an event on specific channel is triggered. It's possible
  *  to distinguish channels by names.
- *
- *  @author     Paweł Kuźnik <pawel.kuznik@gmail.com>
  */
 
 import { EventHandler } from "./EventHandler";
 import { Event } from "./Event";
-import { Channel } from "./Channel";
+import { Channel, EventHandlerUninstaller } from "./Channel";
 
 // export the class
 export class Emitter {
@@ -93,12 +91,23 @@ export class Emitter {
     };
 
     /**
-     *  Install callback on given channel.
-     *
-     *  @param  string      The channel name.
-     *  @param  function    The callback to call when the event is triggered
+     *  Install callback on given channel. This method is identical to the .handle() method,
+     *  but returns emitter instance for chaining.
      */
     public on(name:string, callback:EventHandler) : Emitter {
+
+        // install a handler on an emitter
+        this.handle(name, callback);        
+
+        // allow chaining
+        return this;
+    }
+
+    /**
+     *  Install a handler on a specific event. This method is identical to the .on() method,
+     *  but it returns a function that can be used to uninstall the installed event handler.
+     */
+    public handle(name: string, callback: EventHandler) : EventHandlerUninstaller {
 
         // split the name and tags
         let [channelName, ...tags] = name.split('.');
@@ -118,13 +127,10 @@ export class Emitter {
 
         // do we have callbacks? then use the method. Otherwise, we assume we
         // don't have any callbacks
-        if (tags.length) callbacks.register(callback, tags);
+        if (tags.length) return callbacks.observe(callback, tags);
 
         // register the callback on all
-        else callbacks.register(callback);
-
-        // allow chaining
-        return this;
+        return callbacks.observe(callback);
     }
 
     /**

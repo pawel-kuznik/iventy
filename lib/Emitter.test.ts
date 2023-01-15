@@ -123,6 +123,92 @@ describe('Emitter', () => {
         });
     });
 
+    describe('.handle()', () => {
+
+        it('should handle an event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.handle('test', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test');
+        });
+
+        it('should handle a tagged event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.handle('test.tag', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test.tag');
+        });
+
+        it ('should handle event despise a tag', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.handle('test', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.trigger('test.tag');
+        });
+
+        it('should not handle event with different tag', () => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.handle('test.another', () => {
+
+                // we are done here
+                throw new Error('do not handle this');
+            });
+
+            // trigger the event
+            emitter.trigger('test.test');
+        });
+
+        it('should not handle event after uninstaller is called', () => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            const uninstall = emitter.handle('test.another', () => {
+
+                // we are done here
+                throw new Error('do not handle this');
+            });
+
+            // uninstall the event
+            uninstall()
+
+            // trigger the event
+            emitter.trigger('test.test');
+        });
+    });
+
     describe('.off', () => {
 
         it('should remove previously installed callback', () => {
