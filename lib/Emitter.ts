@@ -8,9 +8,10 @@
 import { EventHandler } from "./EventHandler";
 import { Event } from "./Event";
 import { Channel, EventHandlerUninstaller } from "./Channel";
+import { EmitterLike } from "./EmitterLike";
 
 // export the class
-export class Emitter {
+export class Emitter implements EmitterLike {
 
     /**
      *  A map container arrays of callbacks per callback channel.
