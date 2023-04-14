@@ -92,6 +92,24 @@ export class Emitter implements EmitterLike {
     };
 
     /**
+     *  This is a variation on .trigger() method that puts the execution of the event
+     *  further in the call stack ("defer" execution till there will be more time to do it).
+     *  This is useful when triggering events in a time-sensitive process (like requestAnimationFrame).
+     *  In this case it useful to trigger the event after the requestAnimationFrame() is done
+     *  with its execution.
+     */
+    public deferredTrigger<TPayload>(name:string, data:TPayload, previousEvent:Event<TPayload> | null) : void;
+    public deferredTrigger<TPayload>(name:string, data:TPayload) : void;
+    public deferredTrigger<undefined>(name:string) : void;
+    public deferredTrigger<TPayload>(event:Event<TPayload>) : void;
+    public deferredTrigger(...args:Array<any>) : any {
+
+        setTimeout(() => {
+            this.trigger(args[0], args[1], args[2]);
+        });
+    };
+
+    /**
      *  Install callback on given channel. This method is identical to the .handle() method,
      *  but returns emitter instance for chaining.
      */

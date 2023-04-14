@@ -56,6 +56,24 @@ describe('Emitter', () => {
         });
     });
 
+    describe('.deferredTrigger()', () => {
+        it('should trigger an event', done => {
+
+            // construct an emitter
+            let emitter = new Emitter();
+
+            // install a callback
+            emitter.on('test', () => {
+
+                // we are done here
+                done();
+            });
+
+            // trigger the event
+            emitter.deferredTrigger('test');
+        });
+    });
+
     describe('.on()', () => {
 
         it('should handle an event', done => {
