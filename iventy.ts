@@ -12,3 +12,4 @@ export { Emitter } from './lib/Emitter';
 export { EventHandler } from './lib/EventHandler';
 export { Federation } from './lib/Federation';
 export { Signal, SignalController, SignalCallback, SignalCallbackUninstaller } from "./lib/Signal";
+export { EventHandlerUninstaller } from "./lib/Channel";
