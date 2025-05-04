@@ -52,7 +52,7 @@ export class Emitter implements EmitterLike {
      *  @param  string  The name of the channel of the event.
      *  @return Iventy.Event    The triggered event.
      */
-    public trigger<undefined>(name:string) : Event<undefined>;
+    public trigger<TBlank = undefined>(name:string) : Event<TBlank>;
 
     /**
      *  Trigger event on the emitter.
@@ -100,7 +100,7 @@ export class Emitter implements EmitterLike {
      */
     public deferredTrigger<TPayload>(name:string, data:TPayload, previousEvent:Event<TPayload> | null) : void;
     public deferredTrigger<TPayload>(name:string, data:TPayload) : void;
-    public deferredTrigger<undefined>(name:string) : void;
+    public deferredTrigger<TBlank = undefined>(name:string) : void;
     public deferredTrigger<TPayload>(event:Event<TPayload>) : void;
     public deferredTrigger(...args:Array<any>) : any {
 
